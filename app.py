@@ -23,6 +23,9 @@ class User(db.Model):
     name = db.Column(db.String(100), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
+    with app.app_context():
+    db.create_all()
+
 # ---- Routes ----
 @app.route("/", methods=["GET", "POST"])
 def index():
