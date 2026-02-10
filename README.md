@@ -10,3 +10,5 @@ A simple production-style Flask app with:
 ## Run locally
 ```bash
 python3 app.py
+
+GitHub Action
