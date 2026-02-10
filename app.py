@@ -6,9 +6,12 @@ from datetime import datetime
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "dev-secret-key")
 
-# SQLite configuration
+# ---- Database config ----
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
-DB_PATH = os.path.join(BASE_DIR, "instance", "app.db")
+INSTANCE_DIR = os.path.join(BASE_DIR, "instance")
+os.makedirs(INSTANCE_DIR, exist_ok=True)
+
+DB_PATH = os.path.join(INSTANCE_DIR, "app.db")
 
 app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
     "DATABASE_URL", f"sqlite:///{DB_PATH}"
@@ -22,9 +25,6 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-
-    with app.app_context():
-    db.create_all()
 
 # ---- Routes ----
 @app.route("/", methods=["GET", "POST"])
@@ -53,15 +53,10 @@ def delete_user(user_id):
     flash("User deleted ❌", "danger")
     return redirect(url_for("index"))
 
-# ---- App Entry Point ----
+# ---- App startup (IMPORTANT PART) ----
+with app.app_context():
+    db.create_all()
+
+# ---- Local dev only ----
 if __name__ == "__main__":
-    with app.app_context():
-        db.create_all()
-
-        # Insert sample user only if table is empty
-        if User.query.count() == 0:
-            user = User(name="First User")
-            db.session.add(user)
-            db.session.commit()
-
     app.run(debug=True)
