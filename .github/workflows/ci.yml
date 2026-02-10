@@ -33,10 +33,6 @@ jobs:
           script: |
             cd flask-sqlite-app || exit 1
             git pull origin main
-            docker stop flask-app || true
-            docker rm flask-app || true
-            docker build -t flask-sqlite-app:prod .
-            docker run -d \
-              --name flask-app \
-              -p 80:5000 \
-              flask-sqlite-app:prod
+            docker compose down
+            docker compose build
+            docker compose up -d
