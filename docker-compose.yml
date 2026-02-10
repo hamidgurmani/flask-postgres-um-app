@@ -1,0 +1,20 @@
+version: "3.9"
+
+services: 
+  web:
+    build: .
+    ports: 
+      - "5000:5000"
+    environment: 
+      - ENV_FLASK=prouction
+    env_file:
+      - .env
+    volumes:  
+      - ./instance:/app/instance
+    restart: always 
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
