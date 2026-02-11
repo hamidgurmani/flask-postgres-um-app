@@ -1,44 +1,32 @@
 version: "3.9"
 
 services:
+
+  nginx:
+    image: nginx:latest
+    depends_on:
+      - web
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    restart: always
+
   web:
-    image:hamid009/flask-sqlite-app:latest
-    container_name: flask-app
-    #ports:
-      #- "80:5000"
+    image: hamid009/flask-sqlite-app:latest
+    expose:
+      - "5000"
+    env_file:
+      - ${ENV_FILE}
     depends_on:
       - db
-    env_file: 
-      - ${ENV_FILE}
-        #environment:
-        #DATABASE_URL: postgresql://postgres:postgres@db:5432/flaskdb
-        #SECRET_KEY: super-secret-key
     restart: always
 
   db:
     image: postgres:15
-    container_name: postgres-db
     env_file:
       - ${ENV_FILE}
-      #environment:
-      #POSTGRES_USER: postgres
-      #POSTGRES_PASSWORD: postgres
-      #POSTGRES_DB: flaskdb
     volumes:
       - postgres_data:/var/lib/postgresql/data
     restart: always
-  
-  nginx: 
-    image: nginx:latest
-    container_name: nginx
-    ports:
-      - "80:80"
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-    depends_on: 
-      - web
-    restart: always    
-          
 
 volumes:
   postgres_data:
