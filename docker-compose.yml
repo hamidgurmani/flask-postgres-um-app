@@ -8,18 +8,22 @@ services:
       #- "80:5000"
     depends_on:
       - db
-    environment:
-      DATABASE_URL: postgresql://postgres:postgres@db:5432/flaskdb
-      SECRET_KEY: super-secret-key
+    env_file: 
+      - ${ENV_FILE}
+        #environment:
+        #DATABASE_URL: postgresql://postgres:postgres@db:5432/flaskdb
+        #SECRET_KEY: super-secret-key
     restart: always
 
   db:
     image: postgres:15
     container_name: postgres-db
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: flaskdb
+    env_file:
+      - ${ENV_FILE}
+      #environment:
+      #POSTGRES_USER: postgres
+      #POSTGRES_PASSWORD: postgres
+      #POSTGRES_DB: flaskdb
     volumes:
       - postgres_data:/var/lib/postgresql/data
     restart: always
