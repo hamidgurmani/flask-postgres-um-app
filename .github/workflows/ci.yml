@@ -23,11 +23,8 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build and Push Image
-        run: |
-          if [ -z "${{ secrets.DOCKERHUB_USERNAME }}" ]; then
-            echo "DOCKERHUB_USERNAME secret is missing"
-            exit 1
-          fi
-
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/flask-sqlite-app:latest .
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/flask-sqlite-app:latest
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/flask-sqlite-app:latest
