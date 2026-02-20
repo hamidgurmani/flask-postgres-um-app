@@ -9,8 +9,8 @@ app.secret_key = os.environ.get("SECRET_KEY", "dev-secret-key")
 # ----Database configuration----
 DATABASE_URL = os.environ.get(
     "DATABASE_URL",
-    "sqlite:///app.db"
-   # "postgresql://postgres:postgres@db:5432/flaskdb"
+   # "sqlite:///app.db"
+    "postgresql://postgres:postgres@db:5432/flaskdb"
 )
 
 app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL
