@@ -18,9 +18,12 @@ ENV PATH="/opt/venv/bin:$PATH"
 
 COPY requirements.txt .
 
-RUN pip install --upgrade pip setuptools \
-    && pip install --no-cache-dir -r requirements.txt \
-    && pip install --upgrade wheel
+RUN pip install --upgrade \
+    pip \
+    "setuptools>=75.0.0" \
+    "wheel>=0.46.2" \
+    && pip install --no-cache-dir -r requirements.txt
+
 
 COPY . .
 
