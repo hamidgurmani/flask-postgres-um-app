@@ -1,0 +1,40 @@
+name: Flask CI/CD Pipeline
+
+on: 
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs: 
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:  
+      - name: checkout code
+        uses: actions/checkout@v3
+        
+      - name: Set up python 
+        uses: actions/setup-python@v4
+        with: 
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip 
+          pip install -r requirements.txt
+
+      - name: Lint with flake8
+        run: |
+          pip install flake8
+          flake8
+
+     - name: Build image
+       run: |
+         docker build -t flask-user-app:ci .
+
+     - name: Scan Docker Image with Trivy
+       uses: aquasecurity/trivy-action@master
+       with: 
+         image-ref: flask-user-app:ci
+
