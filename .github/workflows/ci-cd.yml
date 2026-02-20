@@ -31,10 +31,15 @@ jobs:
 
     - name: Build Docker image
       run: |
-        docker build -t flask-user-app:ci .
+        docker build -t flask-user-app:latest .
+
+# ----- Trivy Security Scan -----
+    - name: Install Trivy
+      run: |
+        sudo apt-get update && sudo apt-get install -y wget
+        wget https://github.com/aquasecurity/trivy/releases/latest/download/trivy_0.44.0_Linux-64bit.deb
+        sudo dpkg -i trivy_0.44.0_Linux-64bit.deb
 
     - name: Scan Docker image with Trivy
-      uses: aquasecurity/trivy-action@master
-      with:
-        image-ref: flask-user-app:ci
+      run: trivy image --exit-code 1 --severity HIGH,CRITICAL flask-user-app:latest
 
