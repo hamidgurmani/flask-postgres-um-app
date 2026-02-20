@@ -34,10 +34,14 @@ jobs:
       run: docker build -t flask-user-app:ci .
 
 # ---------- Trivy Scan ----------
-    - name: Scan Docker image with Trivy
-      uses: aquasecurity/trivy-action@0.20.0
+    - name: Run Trivy scan
+      uses: aquasecurity/trivy-action@master
       with:
         image-ref: flask-user-app:ci
-        severity: HIGH,CRITICAL
+        format: table
         exit-code: 1
+        ignorefile: .trivyignore
+        vuln-type: os,library
+        severity: HIGH,CRITICAL
+ 
 
