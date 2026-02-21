@@ -45,8 +45,8 @@ ENV PATH="/opt/venv/bin:$PATH"
 COPY --from=builder /app /app
 
 # Non-root user
-RUN useradd -m appuser
-USER appuser
+RUN useradd -u 10001 -m appuser
+USER 10001
 
 EXPOSE 5000
 
